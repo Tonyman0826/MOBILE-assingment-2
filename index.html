@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>維基主題清單</title>
+    <title>维基主题清单</title>
     <!-- Ionic CDN -->
     <script
       type="module"
@@ -18,7 +18,6 @@
       href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"
     />
     <style>
-      /* 使用 Ionic CSS 變數 */
       :root {
         --custom-primary: #3880ff;
         --custom-primary-light: #e8f2ff;
@@ -28,8 +27,6 @@
         --custom-medium: #92949c;
       }
 
-      /* 自定義卡片 原有樣式保持不變
- */
       .custom-card {
         --background: white;
         --border-radius: 12px;
@@ -89,7 +86,6 @@
         margin-right: 8px;
       }
 
-      /* 響應式設計 */
       @media (max-width: 768px) {
         .desktop-only {
           display: none;
@@ -117,7 +113,6 @@
         }
       }
 
-      /* 動畫效果 */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -148,7 +143,6 @@
         animation: slideIn 0.3s ease-out;
       }
 
-      /* 載入狀態 */
       .skeleton-loader {
         background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
         background-size: 200% 100%;
@@ -165,7 +159,6 @@
         }
       }
 
-      /* 錯誤狀態 - 确保样式可见 */
       .error-state {
         text-align: center;
         padding: 3rem 1rem;
@@ -183,7 +176,6 @@
         min-width: 180px;
       }
 
-      /* 初始化載入狀態 - 确保占满屏幕可视区域 */
       .init-loading {
         display: flex;
         justify-content: center;
@@ -193,14 +185,12 @@
         width: 100%;
       }
 
-      /* 加载更多提示样式 */
       .load-more-tip {
         text-align: center;
         padding: 1rem;
         color: var(--custom-medium);
       }
 
-      /* 视频相关样式 */
       .video-container {
         margin-top: 12px;
         border-radius: 8px;
@@ -247,22 +237,38 @@
         margin-right: 6px;
         font-size: 1.2em;
       }
+
+      .retry-button {
+        margin-top: 1rem;
+      }
     </style>
   </head>
   <body>
     <ion-app>
-      <!-- 初始化載入狀態 (API加载失败时显示错误提示) -->
+      <!-- 初始化載入狀態 -->
       <div id="init-loading" class="init-loading">
         <ion-spinner name="crescent" style="width: 40px; height: 40px;"></ion-spinner>
-        <p style="margin-top: 16px; color: var(--custom-medium);">正在請求 /api/wiki-entries 接口，獲取全部數據...</p>
+        <p style="margin-top: 16px; color: var(--custom-medium);">正在請求 API 數據...</p>
+      </div>
+
+      <!-- API錯誤狀態 (初始隱藏) -->
+      <div id="api-error-state" class="init-loading" style="display: none;">
+        <ion-icon name="warning" style="font-size: 4rem; color: var(--custom-danger); margin-bottom: 1rem;"></ion-icon>
+        <h3 style="color: var(--custom-danger);">無法連接到API服務器</h3>
+        <p style="text-align: center; color: var(--custom-medium); margin: 1rem 0;">
+          請檢查您的網絡連接，然後重試
+        </p>
+        <ion-button id="retry-api-button" color="primary" class="retry-button">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          重新嘗試連接
+        </ion-button>
       </div>
 
       <!-- 主頁面內容 (初始隱藏) -->
       <div id="main-content" style="display: none;">
-        <!-- 原有HTML結構保持不變 -->
         <ion-header class="search-header">
           <ion-toolbar>
-            <ion-title>維基主題清單</ion-title>
+            <ion-title>维基主题清单</ion-title>
             
             <ion-buttons slot="end">
               <ion-button id="theme-toggle" fill="clear">
@@ -274,7 +280,6 @@
             </ion-buttons>
           </ion-toolbar>
 
-          <!-- 搜索區域 -->
           <ion-toolbar>
             <ion-searchbar 
               placeholder="搜尋主題..."
@@ -284,7 +289,6 @@
             </ion-searchbar>
           </ion-toolbar>
 
-          <!-- 分類篩選 -->
           <ion-toolbar>
             <ion-segment value="all" id="category-segment">
               <ion-segment-button value="all">
@@ -302,18 +306,18 @@
               <ion-segment-button value="favorites">
                 <ion-label>收藏</ion-label>
               </ion-segment-button>
+              <ion-segment-button value="videos">
+                <ion-label>视频</ion-label>
+              </ion-segment-button>
             </ion-segment>
           </ion-toolbar>
         </ion-header>
 
         <ion-content fullscreen="true">
-          <!-- 篩選狀態顯示 -->
           <div id="filter-status" class="filter-status" style="display: none;"></div>
 
-          <!-- 響應式佈局 -->
           <ion-grid fixed>
             <ion-row>
-              <!-- 桌面端側邊欄 -->
               <ion-col size="12" size-md="3" class="desktop-only">
                 <ion-list class="slide-in">
                   <ion-list-header>
@@ -353,7 +357,6 @@
                     <ion-badge slot="end" color="warning" id="count-favorites">0</ion-badge>
                   </ion-item>
 
-                  <!-- 添加视频筛选选项 -->
                   <ion-item button id="filter-videos">
                     <ion-icon name="play" slot="start"></ion-icon>
                     <ion-label>含视频内容</ion-label>
@@ -361,7 +364,6 @@
                   </ion-item>
                 </ion-list>
 
-                <!-- 統計資訊 -->
                 <ion-list class="slide-in" style="margin-top: 1rem;">
                   <ion-list-header>
                     <ion-label>統計資訊</ion-label>
@@ -385,9 +387,7 @@
                 </ion-list>
               </ion-col>
 
-              <!-- 主要內容區域 -->
               <ion-col size="12" size-md="9">
-                <!-- 下拉刷新 -->
                 <ion-refresher slot="fixed" id="content-refresher">
                   <ion-refresher-content
                     pulling-icon="lines"
@@ -396,30 +396,25 @@
                   </ion-refresher-content>
                 </ion-refresher>
 
-                <!-- 載入狀態 -->
                 <div id="loading-state" style="display: none;">
                   <div class="skeleton-loader" style="height: 80px; margin: 8px; border-radius: 12px;"></div>
                   <div class="skeleton-loader" style="height: 80px; margin: 8px; border-radius: 12px;"></div>
                   <div class="skeleton-loader" style="height: 80px; margin: 8px; border-radius: 12px;"></div>
                 </div>
 
-                <!-- 主題列表 -->
                 <ion-list lines="full" id="theme-list">
                   <!-- 列表內容由 JavaScript 動態生成 -->
                 </ion-list>
 
-                <!-- 加載更多提示 -->
                 <div id="load-more-tip" class="load-more-tip" style="display: none;">
                   <ion-spinner name="dots" style="width: 20px; height: 20px;"></ion-spinner>
                   <p>正在加載更多API數據...</p>
                 </div>
 
-                <!-- 加載完成提示 -->
                 <div id="load-complete-tip" class="load-more-tip" style="display: none;">
                   <p>已加載全部API數據</p>
                 </div>
 
-                <!-- 無限滾動 -->
                 <ion-infinite-scroll id="infinite-scroll">
                   <ion-infinite-scroll-content
                     loading-spinner="none"
@@ -431,7 +426,6 @@
           </ion-grid>
         </ion-content>
 
-        <!-- 浮動操作按鈕 -->
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button id="main-fab">
             <ion-icon name="ellipsis-vertical"></ion-icon>
@@ -446,14 +440,12 @@
             <ion-fab-button color="danger" id="fab-logout" data-action="logout" style="display: none;">
               <ion-icon name="log-out"></ion-icon>
             </ion-fab-button>
-            <!-- 重新加載API按鈕 -->
             <ion-fab-button color="primary" id="fab-reload" data-action="reload">
               <ion-icon name="refresh"></ion-icon>
             </ion-fab-button>
           </ion-fab-list>
         </ion-fab>
 
-        <!-- 設定模態框 -->
         <ion-modal trigger="theme-toggle" id="settings-modal">
           <ion-header>
             <ion-toolbar>
@@ -488,7 +480,6 @@
           </ion-content>
         </ion-modal>
 
-        <!-- 視頻播放模態框 -->
         <ion-modal id="video-modal">
           <ion-header>
             <ion-toolbar>
@@ -510,8 +501,6 @@
           </ion-content>
         </ion-modal>
 
-        <!-- 其他原有模態框保持不變 -->
-        <!-- 資訊模態框 -->
         <ion-modal trigger="info-button" id="info-modal">
           <ion-header>
             <ion-toolbar>
@@ -528,15 +517,15 @@
               <ion-item>
                 <ion-icon name="logo-ionic" slot="start" color="primary"></ion-icon>
                 <ion-label>
-                  <h3>維基主題清單</h3>
+                  <h3>维基主题清单</h3>
                   <p>版本 1.0.0</p>
                 </ion-label>
               </ion-item>
               <ion-item>
                 <ion-label class="ion-text-wrap">
                   <h4>功能特色</h4>
-                  <p>• 顯示全部API中的維基主題</p>
-                  <p>• 主題搜索與篩選</p>
+                  <p>• 顯示全部API中的维基主题</p>
+                  <p>• 主题搜索與篩選</p>
                   <p>• 分類管理</p>
                   <p>• 收藏功能</p>
                   <p>• 視頻播放</p>
@@ -547,7 +536,6 @@
           </ion-content>
         </ion-modal>
 
-        <!-- 註冊模態框 -->
         <ion-modal id="signup-modal">
           <ion-header>
             <ion-toolbar>
@@ -583,7 +571,6 @@
           </ion-content>
         </ion-modal>
 
-        <!-- 登入模態框 -->
         <ion-modal id="login-modal">
           <ion-header>
             <ion-toolbar>
@@ -621,18 +608,12 @@
       </div>
 
     <script>
-      /**
-       * 事件管理器 - 統一管理所有事件處理
-       */
       class EventManager {
         constructor() {
           this.handlers = new Map();
           this.debounceTimers = new Map();
         }
 
-        /**
-         * 註冊事件監聽器
-         */
         on(element, event, handler, options = {}) {
           if (!element) {
             console.warn('無法註冊事件: 元素為 null', event);
@@ -650,9 +631,6 @@
           return () => this.off(element, event);
         }
 
-        /**
-         * 移除事件監聽器
-         */
         off(element, event) {
           if (this.handlers.has(element)) {
             const handlers = this.handlers.get(element);
@@ -663,9 +641,6 @@
           }
         }
 
-        /**
-         * 包裝處理器（支持防抖、節流）
-         */
         wrapHandler(handler, options) {
           let wrappedHandler = handler;
 
@@ -680,9 +655,6 @@
           return wrappedHandler;
         }
 
-        /**
-         * 防抖函數
-         */
         debounce(func, wait) {
           return (...args) => {
             const key = func.toString();
@@ -691,9 +663,6 @@
           };
         }
 
-        /**
-         * 節流函數
-         */
         throttle(func, limit) {
           let inThrottle;
           return (...args) => {
@@ -705,16 +674,10 @@
           };
         }
 
-        /**
-         * 一次性事件
-         */
         once(element, event, handler) {
           return this.on(element, event, handler, { once: true });
         }
 
-        /**
-         * 清理所有事件
-         */
         destroy() {
           for (const [element, events] of this.handlers) {
             for (const [event, handler] of events) {
@@ -726,13 +689,7 @@
         }
       }
 
-      /**
-       * DOM 操作管理器
-       */
       class DOMManager {
-        /**
-         * 安全查詢元素
-         */
         static query(selector, parent = document) {
           try {
             const element = parent.querySelector(selector);
@@ -743,9 +700,6 @@
           }
         }
 
-        /**
-         * 安全查詢多個元素
-         */
         static queryAll(selector, parent = document) {
           try {
             return Array.from(parent.querySelectorAll(selector));
@@ -755,9 +709,6 @@
           }
         }
 
-        /**
-         * 創建元素
-         */
         static create(tag, options = {}) {
           const element = document.createElement(tag);
           
@@ -794,9 +745,6 @@
           return element;
         }
 
-        /**
-         * 顯示/隱藏元素
-         */
         static toggleVisibility(selector, show) {
           const element = this.query(selector);
           if (element) {
@@ -805,9 +753,6 @@
         }
       }
 
-      /**
-       * 資料管理器
-       */
       class DataManager {
         constructor() {
           this.items = [];
@@ -815,7 +760,7 @@
             search: '',
             category: 'all',
             favorites: false,
-            videos: false  // 新增视频筛选条件
+            videos: false
           };
           this.currentPage = 1;
           this.hasMore = true;
@@ -823,27 +768,20 @@
           this.totalPages = 1;
           this.totalItems = 0;
           this.toastHandler = null;
+          this.apiBaseUrl = 'https://dae-mobile-assignment.hkit.cc/api';
+          this.apiError = false;
         }
 
-        /**
-         * 設置 Toast 處理器
-         */
         setToastHandler(handler) {
           this.toastHandler = handler;
         }
 
-        /**
-         * 顯示 Toast
-         */
         showToast(message, color = 'primary') {
           if (this.toastHandler) {
             this.toastHandler(message, color);
           }
         }
 
-        /**
-         * 顯示/隱藏載入狀態
-         */
         showLoading(show) {
           const loadingElement = document.getElementById('loading-state');
           const listElement = document.getElementById('theme-list');
@@ -864,139 +802,24 @@
           }
         }
 
-        /**
-         * 初始化資料 - 只從API加載
-         */
         async initializeData() {
           try {
-            console.log('🔍 請求 /api/wiki-entries 接口，獲取第1頁數據...');
+            console.log(`請求 ${this.apiBaseUrl}/wiki-entries 接口，獲取第1頁數據...`);
             
             this.showLoading(true);
+            this.apiError = false;
             
-            // 先使用提供的测试数据，实际应用中替换为真实API
-            // const response = await fetch('https://dae-mobile-assignment.hkit.cc/api/wiki-entries?page=1&limit=10');
+            // 只从API获取数据，不使用任何模拟数据
+            const response = await fetch(`${this.apiBaseUrl}/wiki-entries?page=1&limit=10`);
             
-            // 模拟API响应，使用提供的测试数据
-            const mockResponse = {
-              "items": [
-                {
-                  "id": 80,
-                  "tags": [
-                    "生物多樣性",
-                    "地球生態系統",
-                    "多樣性",
-                    "保育挑戰",
-                    "永續發展策略",
-                    "生態"
-                  ],
-                  "last_editor": "生態學家",
-                  "last_edit_date": "2024-02-29",
-                  "views": 19000,
-                  "created_at": "2025-04-16 05:13:47",
-                  "updated_at": "2025-05-04 08:14:53",
-                  "title": "生物多樣性",
-                  "description": "地球生態系統的多樣性、保育挑戰和永續發展策略。",
-                  "category": "生態",
-                  "image_url": "https://ikimono-museum.city.kyoto.lg.jp/wp/wp-content/themes/ikimono-museum/assets/img/page/02-01.png",
-                  "video_url": "https://www.youtube.com/watch?v=RmJSyAikHJ4",
-                  "published_at": "2024-03-01",
-                  "languages": [
-                    "繁體中文",
-                    "簡體中文",
-                    "英文",
-                    "法文",
-                    "西班牙文",
-                    "葡萄牙文"
-                  ],
-                  "references": [
-                    "生物多樣性公約",
-                    "WWF研究報告",
-                    "生態保育期刊",
-                    "物種紅皮書"
-                  ]
-                },
-                {
-                  "id": 79,
-                  "tags": [
-                    "世界建築史",
-                    "建築風格",
-                    "流派",
-                    "代表作品",
-                    "建築",
-                    "建築史"
-                  ],
-                  "last_editor": "建築史學者",
-                  "last_edit_date": "2024-02-24",
-                  "views": 16000,
-                  "created_at": "2025-04-16 05:13:45",
-                  "updated_at": "2025-05-04 08:14:53",
-                  "title": "世界建築史",
-                  "description": "從古代到現代的世界重要建築風格、流派和代表作品。",
-                  "category": "建築",
-                  "image_url": "https://onosekkei.net/wp/wp-content/uploads/2018/04/15351069877a5e761263bda3dfa2505a-1024x717.jpg",
-                  "video_url": "https://www.youtube.com/watch?v=ReSffPAzvrA",
-                  "published_at": "2024-02-25",
-                  "languages": [
-                    "繁體中文",
-                    "簡體中文",
-                    "英文",
-                    "法文",
-                    "義大利文",
-                    "西班牙文"
-                  ],
-                  "references": [
-                    "世界建築史料",
-                    "建築理論文獻",
-                    "現代建築評論",
-                    "建築師傳記集"
-                  ]
-                },
-                {
-                  "id": 78,
-                  "tags": [
-                    "太空探索史",
-                    "人類太空探索",
-                    "重要里程碑",
-                    "技術突破",
-                    "未來展望",
-                    "科學"
-                  ],
-                  "last_editor": "航太工程師",
-                  "last_edit_date": "2024-02-19",
-                  "views": 20000,
-                  "created_at": "2025-04-16 05:13:43",
-                  "updated_at": "2025-05-04 08:14:53",
-                  "title": "太空探索史",
-                  "description": "人類太空探索的重要里程碑、技術突破和未來展望。",
-                  "category": "科學",
-                  "image_url": "https://m.media-amazon.com/images/I/314NdmsAc6L._AC_UF1000,1000_QL80_.jpg",
-                  "video_url": "https://www.youtube.com/watch?v=BrXqyhEqTQQ",
-                  "published_at": "2024-02-20",
-                  "languages": [
-                    "繁體中文",
-                    "簡體中文",
-                    "英文",
-                    "俄文",
-                    "法文",
-                    "德文"
-                  ],
-                  "references": [
-                    "NASA檔案",
-                    "太空總署報告",
-                    "航太科技期刊",
-                    "太空探索大事記"
-                  ]
-                }
-              ],
-              "pagination": {
-                "page": 1,
-                "limit": 3,
-                "total": 10
-              }
-            };
-
-            // 处理数据，映射到我们的应用模型
-            this.items = mockResponse.items.map(item => ({
+            if (!response.ok) {
+              throw new Error(`API請求失敗: ${response.status} ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            // 处理API返回的数据
+            this.items = data.items.map(item => ({
               id: item.id,
               title: item.title,
               subtitle: item.category,
@@ -1005,7 +828,6 @@
               category: this.mapCategory(item.category),
               favorite: false,
               apiData: true,
-              // 新增视频相关字段
               imageUrl: item.image_url,
               videoUrl: item.video_url,
               views: item.views,
@@ -1013,30 +835,23 @@
               languages: item.languages || []
             }));
             
-            this.totalPages = mockResponse.pagination.total_pages || 1;
-            this.totalItems = mockResponse.pagination.total || 0;
+            this.totalPages = Math.ceil(data.pagination.total / data.pagination.limit);
+            this.totalItems = data.pagination.total;
             this.currentPage = 1;
             this.hasMore = this.currentPage < this.totalPages;
             
             this.showToast(`已加載 ${this.items.length}/${this.totalItems} 條API數據`, 'success');
             
-            // 如果有多頁數據，嘗試加載更多
-            if (this.hasMore) {
-              this.showToast(`發現更多數據，共 ${this.totalPages} 頁`, 'primary');
-            }
-            
             return this.items;
           } catch (error) {
-            console.error('💥 /api/wiki-entries 接口錯誤:', error);
-            throw error; // 傳遞錯誤，讓上層處理
+            console.error('API請求錯誤:', error);
+            this.apiError = true;
+            throw error; // 传递错误，让上层处理
           } finally {
             this.showLoading(false);
           }
         }
 
-        /**
-         * 載入更多API資料
-         */
         async loadMoreData() {
           if (this.isLoading || !this.hasMore) {
             return [];
@@ -1046,41 +861,39 @@
             this.isLoading = true;
             this.currentPage++;
             
-            // 顯示加載更多提示
             DOMManager.toggleVisibility('#load-more-tip', true);
             DOMManager.toggleVisibility('#load-complete-tip', false);
             
-            console.log(`📖 載入第 ${this.currentPage} 頁資料，共 ${this.totalPages} 頁`);
+            console.log(`載入第 ${this.currentPage} 頁資料，共 ${this.totalPages} 頁`);
             
-            // 模拟加载更多数据
-            // 实际应用中替换为真实API请求
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // 只从API加载更多数据
+            const response = await fetch(`${this.apiBaseUrl}/wiki-entries?page=${this.currentPage}&limit=10`);
             
-            // 生成模拟数据
-            const newItems = [];
-            for (let i = 0; i < 3; i++) {
-              const id = 77 - (this.currentPage - 1) * 3 - i;
-              newItems.push({
-                id: id,
-                title: `模擬主題 ${id}`,
-                subtitle: `分類 ${id % 3 === 0 ? '科學' : id % 3 === 1 ? '技術' : '文化'}`,
-                details: `這是模擬的主題描述 ${id}，用於展示加載更多功能。`,
-                tags: [`標籤 ${id}`, `範疇 ${id % 3 + 1}`],
-                category: this.mapCategory(id % 3 === 0 ? '科學' : id % 3 === 1 ? '技術' : '文化'),
-                favorite: false,
-                apiData: true,
-                imageUrl: `https://picsum.photos/seed/${id}/400/225`,
-                videoUrl: id % 2 === 0 ? `https://www.youtube.com/watch?v=BrXqyhEqTQQ` : null,
-                views: 1000 + id * 100,
-                lastEditDate: "2024-02-19",
-                languages: ["繁體中文", "簡體中文", "英文"]
-              });
+            if (!response.ok) {
+              throw new Error(`加載更多失敗: ${response.status} ${response.statusText}`);
             }
             
-            this.items = [...this.items, ...newItems];
-            this.hasMore = this.currentPage < 3; // 限制最多3页，用于演示
+            const data = await response.json();
             
-            // 更新提示狀態
+            const newItems = data.items.map(item => ({
+              id: item.id,
+              title: item.title,
+              subtitle: item.category,
+              details: item.description,
+              tags: item.tags || [],
+              category: this.mapCategory(item.category),
+              favorite: false,
+              apiData: true,
+              imageUrl: item.image_url,
+              videoUrl: item.video_url,
+              views: item.views,
+              lastEditDate: item.last_edit_date,
+              languages: item.languages || []
+            }));
+            
+            this.items = [...this.items, ...newItems];
+            this.hasMore = this.currentPage < this.totalPages;
+            
             if (!this.hasMore) {
               DOMManager.toggleVisibility('#load-more-tip', false);
               DOMManager.toggleVisibility('#load-complete-tip', true);
@@ -1091,7 +904,7 @@
             
             return newItems;
           } catch (error) {
-            console.error('💥 載入更多資料錯誤:', error);
+            console.error('加載更多資料錯誤:', error);
             this.currentPage--; // 回退頁碼
             this.showToast('加載更多API數據時發生錯誤', 'danger');
             return [];
@@ -1103,9 +916,6 @@
           }
         }
 
-        /**
-         * 映射分類
-         */
         mapCategory(category) {
           const categoryMap = {
             'education': 'education',
@@ -1122,9 +932,6 @@
           return categoryMap[category] || 'education';
         }
 
-        /**
-         * 過濾資料
-         */
         filterItems() {
           return this.items.filter(item => {
             const matchesSearch = !this.filters.search || 
@@ -1138,35 +945,27 @@
             
             const matchesFavorites = !this.filters.favorites || item.favorite;
             
-            // 新增视频筛选条件
             const matchesVideos = !this.filters.videos || (item.videoUrl && item.videoUrl.trim() !== '');
             
             return matchesSearch && matchesCategory && matchesFavorites && matchesVideos;
           });
         }
 
-        /**
-         * 更新篩選條件
-         */
         updateFilters(newFilters) {
           this.filters = { ...this.filters, ...newFilters };
           return this.filterItems();
         }
 
-        /**
-         * 切換收藏狀態
-         */
         async toggleFavorite(itemId, authService) {
           const item = this.items.find(item => item.id === itemId);
           if (!item) return false;
 
           const newFavoriteState = !item.favorite;
           
-          // 如果用戶已登入且是 API 資料，則同步到後端
           if (authService.isLoggedIn() && item.apiData) {
             try {
               const method = newFavoriteState ? 'POST' : 'DELETE';
-              const url = `https://dae-mobile-assignment.hkit.cc/api/bookmarks/${itemId}`;
+              const url = `${this.apiBaseUrl}/bookmarks/${itemId}`;
               
               const response = await fetch(url, {
                 method: method,
@@ -1186,10 +985,9 @@
             } catch (error) {
               console.error('收藏操作失敗:', error);
               this.showToast('收藏操作失敗，請檢查網路連線', 'warning');
-              return item.favorite; // 返回原狀態
+              return item.favorite;
             }
           } else {
-            // 本地操作或未登入用戶
             item.favorite = newFavoriteState;
             if (authService.isLoggedIn()) {
               this.showToast(newFavoriteState ? '已加入收藏' : '已取消收藏', 'success');
@@ -1200,14 +998,11 @@
           }
         }
 
-        /**
-         * 載入用戶收藏狀態
-         */
         async loadUserFavorites(authService) {
           if (!authService.isLoggedIn()) return;
 
           try {
-            const response = await fetch('https://dae-mobile-assignment.hkit.cc/api/bookmarks', {
+            const response = await fetch(`${this.apiBaseUrl}/bookmarks`, {
               headers: {
                 'Authorization': `Bearer ${authService.token}`
               }
@@ -1217,27 +1012,22 @@
               const favorites = await response.json();
               const favoriteIds = new Set(favorites.item_ids);
               
-              // 更新本地收藏狀態
               this.items.forEach(item => {
                 if (favoriteIds.has(item.id)) {
                   item.favorite = true;
                 }
               });
               
-              console.log('✅ 已同步用戶收藏狀態');
+              console.log('已同步用戶收藏狀態');
             }
           } catch (error) {
             console.warn('無法載入用戶收藏:', error);
           }
         }
 
-        /**
-         * 獲取統計資料
-         */
         getStatistics() {
           const total = this.items.length;
           const favorites = this.items.filter(item => item.favorite).length;
-          // 新增视频统计
           const videos = this.items.filter(item => item.videoUrl && item.videoUrl.trim() !== '').length;
           const categories = new Set(this.items.map(item => item.category)).size;
           
@@ -1247,16 +1037,13 @@
             community: this.items.filter(item => item.category === 'community').length,
             tools: this.items.filter(item => item.category === 'tools').length,
             favorites: favorites,
-            videos: videos  // 视频数量统计
+            videos: videos
           };
 
           return { total, favorites, videos, categories, categoryCounts };
         }
       }
 
-      /**
-       * 認證服務
-       */
       class AuthService {
         constructor() {
           this.baseURL = 'https://dae-mobile-assignment.hkit.cc/api';
@@ -1264,12 +1051,9 @@
           this.userId = localStorage.getItem('user_id');
         }
 
-        /**
-         * 用戶註冊
-         */
         async signup(username, password) {
           try {
-            console.log('🔐 開始註冊...');
+            console.log('開始註冊...');
             
             const response = await fetch(`${this.baseURL}/auth/signup`, {
               method: 'POST',
@@ -1288,23 +1072,20 @@
             }
 
             const data = await response.json();
-            console.log('✅ 註冊成功:', data);
+            console.log('註冊成功:', data);
             
             this.saveAuthData(data.token, data.user_id);
             
             return data;
           } catch (error) {
-            console.error('❌ 註冊錯誤:', error);
+            console.error('註冊錯誤:', error);
             throw error;
           }
         }
 
-        /**
-         * 用戶登入
-         */
         async login(username, password) {
           try {
-            console.log('🔐 開始登入...');
+            console.log('開始登入...');
             
             const response = await fetch(`${this.baseURL}/auth/login`, {
               method: 'POST',
@@ -1323,49 +1104,37 @@
             }
 
             const data = await response.json();
-            console.log('✅ 登入成功:', data);
+            console.log('登入成功:', data);
             
             this.saveAuthData(data.token, data.user_id);
             
             return data;
           } catch (error) {
-            console.error('❌ 登入錯誤:', error);
+            console.error('登入錯誤:', error);
             throw error;
           }
         }
 
-        /**
-         * 用戶登出
-         */
         logout() {
           this.token = null;
           this.userId = null;
           localStorage.removeItem('auth_token');
           localStorage.removeItem('user_id');
-          console.log('🚪 用戶已登出');
+          console.log('用戶已登出');
         }
 
-        /**
-         * 保存認證資料
-         */
         saveAuthData(token, userId) {
           this.token = token;
           this.userId = userId;
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user_id', userId);
-          console.log('💾 認證資料已保存');
+          console.log('認證資料已保存');
         }
 
-        /**
-         * 檢查是否已登入
-         */
         isLoggedIn() {
           return !!this.token;
         }
 
-        /**
-         * 獲取認證標頭
-         */
         getAuthHeaders() {
           return {
             'Authorization': `Bearer ${this.token}`
@@ -1373,9 +1142,6 @@
         }
       }
 
-      /**
-       * Ionic 主題清單應用程式
-       */
       class IonicThemeListApp {
         constructor() {
           this.eventManager = new EventManager();
@@ -1386,28 +1152,23 @@
           this.isInitialized = false;
         }
 
-        /**
-         * 初始化應用程式
-         */
         async initializeApp() {
           try {
             console.log('開始初始化應用程式...');
             
             DOMManager.toggleVisibility('#init-loading', true);
             DOMManager.toggleVisibility('#main-content', false);
+            DOMManager.toggleVisibility('#api-error-state', false);
 
             await this.waitForIonicComponents();
             
-            // 設置 DataManager 的 toast 處理器
             this.dataManager.setToastHandler((message, color) => this.showToast(message, color));
             
-            // 檢查登入狀態
             this.updateLoginState(this.authService.isLoggedIn());
             
-            // 只從API初始化資料
+            // 只从API初始化数据
             await this.dataManager.initializeData();
             
-            // 如果用戶已登入，載入收藏狀態
             if (this.authService.isLoggedIn()) {
               await this.dataManager.loadUserFavorites(this.authService);
             }
@@ -1424,14 +1185,11 @@
             
           } catch (error) {
             console.error('應用程式初始化失敗:', error);
-            // API加載失敗時顯示錯誤狀態和重新加載按鈕
-            this.showErrorState(`API請求失敗: ${error.message}`, true);
+            // API加载失败时显示错误状态和重新加载按钮
+            this.showApiErrorState(`API請求失敗: ${error.message}`);
           }
         }
 
-        /**
-         * 等待 Ionic 元件註冊完成
-         */
         async waitForIonicComponents() {
           const components = [
             'ion-segment',
@@ -1455,16 +1213,13 @@
           await new Promise(resolve => setTimeout(resolve, 100));
         }
 
-        /**
-         * 設置事件監聽器
-         */
         setupEventListeners() {
-          // 安全的元素查詢
           const searchbar = DOMManager.query('#main-searchbar');
           const segment = DOMManager.query('#category-segment');
           const refresher = DOMManager.query('#content-refresher');
           const infiniteScroll = DOMManager.query('#infinite-scroll');
           const reloadButton = DOMManager.query('#fab-reload');
+          const retryApiButton = DOMManager.query('#retry-api-button');
 
           if (searchbar) {
             this.eventManager.on(
@@ -1499,7 +1254,6 @@
             );
           }
 
-          // 重新加載按鈕事件
           if (reloadButton) {
             this.eventManager.on(
               reloadButton,
@@ -1508,7 +1262,14 @@
             );
           }
 
-          // 註冊相關事件
+          if (retryApiButton) {
+            this.eventManager.on(
+              retryApiButton,
+              'click',
+              () => this.reloadWikiEntries()
+            );
+          }
+
           const signupButton = DOMManager.query('#submit-signup');
           if (signupButton) {
             this.eventManager.on(
@@ -1539,7 +1300,6 @@
             );
           }
 
-          // 登入相關事件
           const loginButton = DOMManager.query('#submit-login');
           if (loginButton) {
             this.eventManager.on(
@@ -1570,7 +1330,6 @@
             );
           }
 
-          // 快速篩選事件 - 新增视频筛选
           ['all', 'education', 'community', 'tools', 'favorites', 'videos'].forEach(category => {
             const element = DOMManager.query(`#filter-${category}`);
             if (element) {
@@ -1582,7 +1341,6 @@
             }
           });
 
-          // FAB 動作事件
           ['signup', 'login', 'logout', 'reload'].forEach(action => {
             const element = DOMManager.query(`#fab-${action}`);
             if (element) {
@@ -1594,7 +1352,6 @@
             }
           });
 
-          // 清除篩選事件
           const clearFilters = DOMManager.query('#clear-filters');
           if (clearFilters) {
             this.eventManager.on(
@@ -1604,7 +1361,6 @@
             );
           }
 
-          // 视频模态框关闭按钮
           const closeVideoModal = DOMManager.query('#close-video-modal');
           if (closeVideoModal) {
             this.eventManager.on(
@@ -1614,7 +1370,6 @@
             );
           }
 
-          // 鍵盤事件
           this.eventManager.on(
             document,
             'keydown',
@@ -1622,58 +1377,63 @@
           );
         }
 
-        /**
-         * 重新加載 Wiki Entries 接口數據
-         */
         async reloadWikiEntries() {
-          // 显示加载状态
-          const initLoading = DOMManager.query('#init-loading');
-          const mainContent = DOMManager.query('#main-content');
-          
-          // 如果是初始化后重新加载，先显示加载动画
-          if (this.isInitialized) {
-            this.dataManager.showLoading(true);
-            this.showToast('正在重新请求 /api/wiki-entries 接口...', 'primary');
-          } else {
-            // 如果是初始化失败后重新加载，切换到加载状态
-            if (initLoading) {
-              initLoading.innerHTML = `
-                <ion-spinner name="crescent" style="width: 40px; height: 40px;"></ion-spinner>
-                <p style="margin-top: 16px; color: var(--custom-medium);">正在重新请求 /api/wiki-entries 接口...</p>
-              `;
-              initLoading.style.display = 'flex';
-            }
-            if (mainContent) mainContent.style.display = 'none';
-          }
+          // 隐藏错误状态，显示加载状态
+          DOMManager.toggleVisibility('#api-error-state', false);
+          DOMManager.toggleVisibility('#init-loading', true);
+          DOMManager.toggleVisibility('#main-content', false);
 
           try {
-            // 重新初始化数据（请求 /api/wiki-entries 接口）
             await this.dataManager.initializeData();
             
-            // 如果用户已登录，重新加载收藏状态
             if (this.authService.isLoggedIn()) {
               await this.dataManager.loadUserFavorites(this.authService);
             }
             
-            // 重新渲染页面
             this.render();
             
-            // 切换到主内容页面
-            if (initLoading) initLoading.style.display = 'none';
-            if (mainContent) mainContent.style.display = 'block';
+            DOMManager.toggleVisibility('#init-loading', false);
+            DOMManager.toggleVisibility('#main-content', true);
             
             this.showToast('API數據重新加載成功！', 'success');
             this.isInitialized = true;
           } catch (error) {
-            // 加载失败提示
-            this.showErrorState(`重新请求失败：${error.message}`, true);
+            this.showApiErrorState(`重新请求失败：${error.message}`);
             this.showToast('重新加载失败，请检查网络后重试', 'danger');
           }
         }
 
-        /**
-         * 處理搜索
-         */
+        showApiErrorState(message) {
+          DOMManager.toggleVisibility('#init-loading', false);
+          DOMManager.toggleVisibility('#main-content', false);
+          DOMManager.toggleVisibility('#api-error-state', true);
+          
+          const errorState = DOMManager.query('#api-error-state');
+          if (errorState) {
+            errorState.innerHTML = `
+              <ion-icon name="warning" style="font-size: 4rem; color: var(--custom-danger); margin-bottom: 1rem;"></ion-icon>
+              <h3 style="color: var(--custom-danger);">無法連接到API服務器</h3>
+              <p style="text-align: center; color: var(--custom-medium); margin: 1rem 0;">
+                ${message}
+              </p>
+              <ion-button id="retry-api-button" color="primary" class="retry-button">
+                <ion-icon name="refresh" slot="start"></ion-icon>
+                重新嘗試連接
+              </ion-button>
+            `;
+            
+            // 重新绑定重试按钮事件
+            const retryButton = DOMManager.query('#retry-api-button');
+            if (retryButton) {
+              this.eventManager.on(
+                retryButton,
+                'click',
+                () => this.reloadWikiEntries()
+              );
+            }
+          }
+        }
+
         handleSearch(searchTerm) {
           if (!this.isInitialized) return;
           
@@ -1684,9 +1444,6 @@
           this.updateFilterStatus();
         }
 
-        /**
-         * 處理分類變化
-         */
         handleCategoryChange(category) {
           if (!this.isInitialized) return;
           
@@ -1703,9 +1460,6 @@
           this.updateFilterStatus();
         }
 
-        /**
-         * 處理快速篩選
-         */
         handleQuickFilter(category) {
           const segment = DOMManager.query('#category-segment');
           if (segment) {
@@ -1714,9 +1468,6 @@
           this.handleCategoryChange(category);
         }
 
-        /**
-         * 處理下拉刷新
-         */
         async handleRefresh(event) {
           this.dataManager.showLoading(true);
           
@@ -1734,9 +1485,6 @@
           }
         }
 
-        /**
-         * 處理無限滾動 - 加載更多API數據
-         */
         async handleInfiniteScroll(event) {
           try {
             const newItems = await this.dataManager.loadMoreData();
@@ -1750,7 +1498,6 @@
             if (event && event.target) {
               event.target.complete();
               
-              // 如果沒有更多資料，禁用無限滾動
               if (!this.dataManager.hasMore) {
                 event.target.disabled = true;
               }
@@ -1758,9 +1505,6 @@
           }
         }
 
-        /**
-         * 處理 FAB 動作
-         */
         handleFabAction(action) {
           const actions = {
             signup: () => this.openSignupModal(),
@@ -1777,9 +1521,6 @@
           }
         }
 
-        /**
-         * 打開註冊模態框
-         */
         openSignupModal() {
           const modal = document.querySelector('ion-modal#signup-modal');
           if (modal) {
@@ -1787,9 +1528,6 @@
           }
         }
 
-        /**
-         * 關閉註冊模態框
-         */
         closeSignupModal() {
           const modal = document.querySelector('ion-modal#signup-modal');
           if (modal) {
@@ -1797,13 +1535,8 @@
           }
         }
 
-        /**
-         * 處理用戶註冊
-         */
         async handleSignup() {
           try {
-            console.log('🟡 開始處理註冊...');
-            
             const username = DOMManager.query('#signup-username').value;
             const password = DOMManager.query('#signup-password').value;
             
@@ -1842,13 +1575,8 @@
           }
         }
 
-        /**
-         * 處理用戶登入
-         */
         async handleLogin() {
           try {
-            console.log('🟡 開始處理登入...');
-            
             const usernameInput = DOMManager.query('#login-username');
             const passwordInput = DOMManager.query('#login-password');
             
@@ -1865,16 +1593,10 @@
               return;
             }
 
-            if (username.length < 3) {
-              this.showToast('用戶名至少需要3個字符', 'warning');
-              return;
-            }
-
             this.dataManager.showLoading(true);
 
             const result = await this.authService.login(username, password);
             
-            // 載入用戶收藏狀態
             await this.dataManager.loadUserFavorites(this.authService);
             
             this.showToast('登入成功！', 'success');
@@ -1884,7 +1606,7 @@
             passwordInput.value = '';
 
             this.updateLoginState(true);
-            this.render(); // 重新渲染以更新收藏狀態
+            this.render();
             
             return result;
 
@@ -1897,9 +1619,6 @@
           }
         }
 
-        /**
-         * 打開登入模態框
-         */
         openLoginModal() {
           const modal = document.querySelector('ion-modal#login-modal');
           if (modal) {
@@ -1907,9 +1626,6 @@
           }
         }
 
-        /**
-         * 關閉登入模態框
-         */
         closeLoginModal() {
           const modal = document.querySelector('ion-modal#login-modal');
           if (modal) {
@@ -1917,35 +1633,23 @@
           }
         }
 
-        /**
-         * 處理用戶登出
-         */
         handleLogout() {
           this.authService.logout();
           this.showToast('已登出', 'medium');
           this.updateLoginState(false);
-          this.render(); // 重新渲染以清除收藏狀態
+          this.render();
         }
 
-        /**
-         * 切換到登入界面
-         */
         switchToLogin() {
           this.closeSignupModal();
           this.openLoginModal();
         }
 
-        /**
-         * 切換到註冊界面
-         */
         switchToSignup() {
           this.closeLoginModal();
           this.openSignupModal();
         }
 
-        /**
-         * 更新登入狀態 UI
-         */
         updateLoginState(isLoggedIn) {
           const fabSignup = DOMManager.query('#fab-signup');
           const fabLogin = DOMManager.query('#fab-login');
@@ -1955,18 +1659,13 @@
             if (fabSignup) fabSignup.style.display = 'none';
             if (fabLogin) fabLogin.style.display = 'none';
             if (fabLogout) fabLogout.style.display = 'block';
-            console.log('✅ 用戶已登入，用戶ID:', this.authService.userId);
           } else {
             if (fabSignup) fabSignup.style.display = 'block';
             if (fabLogin) fabLogin.style.display = 'block';
             if (fabLogout) fabLogout.style.display = 'none';
-            console.log('🚪 用戶未登入');
           }
         }
 
-        /**
-         * 處理鍵盤事件
-         */
         handleKeyboard(event) {
           if (!this.isInitialized) return;
           
@@ -1986,9 +1685,6 @@
           }
         }
 
-        /**
-         * 渲染過濾後的項目
-         */
         renderFilteredItems(filteredItems) {
           const list = DOMManager.query('#theme-list');
           if (!list) return;
@@ -1998,8 +1694,6 @@
             return;
           }
 
-          // 保留现有元素的动画效果
-          const currentItems = list.innerHTML;
           list.innerHTML = '';
           
           filteredItems.forEach(item => {
@@ -2008,9 +1702,6 @@
           });
         }
 
-        /**
-         * 創建列表項目 - 添加视频展示
-         */
         createListItem(item) {
           const ionItem = DOMManager.create('ion-item', {
             classes: 'custom-card fade-in',
@@ -2028,7 +1719,6 @@
             }
           });
 
-          // 构建内容HTML，包含视频信息
           let contentHtml = `
             <ion-label>
               <h2 style="font-weight: 600; margin-bottom: 4px; display: flex; align-items: center;">
@@ -2038,9 +1728,7 @@
               <p style="font-size: 0.9em; color: var(--ion-color-step-600); line-height: 1.4;">${item.details}</p>
           `;
           
-          // 如果有视频URL，添加视频缩略图和播放按钮
           if (item.videoUrl && item.videoUrl.trim() !== '') {
-            // 从YouTube URL提取视频ID
             const videoId = this.extractVideoId(item.videoUrl);
             const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : item.imageUrl;
             
@@ -2057,7 +1745,6 @@
               </div>
             `;
           } else if (item.imageUrl) {
-            // 如果没有视频但有图片，显示图片
             contentHtml += `
               <div style="margin-top: 12px; border-radius: 8px; overflow: hidden;">
                 <img src="${item.imageUrl}" style="width: 100%; height: auto; border-radius: 8px;" alt="${item.title}">
@@ -2065,7 +1752,6 @@
             `;
           }
           
-          // 添加标签容器
           contentHtml += `
               <div class="tag-container" style="margin-top: 8px;">
           `;
@@ -2096,21 +1782,14 @@
           return ionItem;
         }
 
-        /**
-         * 从YouTube URL中提取视频ID
-         */
         extractVideoId(url) {
           if (!url) return null;
           
-          // 处理各种YouTube URL格式
           const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
           const match = url.match(regExp);
           return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        /**
-         * 打開視頻播放模態框
-         */
         openVideoModal(itemId) {
           const item = this.dataManager.items.find(item => item.id == itemId);
           if (!item || !item.videoUrl) return;
@@ -2121,25 +1800,19 @@
             return;
           }
           
-          // 设置视频信息
           document.getElementById('video-modal-title').textContent = item.title;
           document.getElementById('video-player').src = `https://www.youtube.com/embed/${videoId}`;
           document.getElementById('video-description').textContent = item.description;
           
-          // 显示视频模态框
           const modal = document.querySelector('ion-modal#video-modal');
           if (modal) {
             modal.present();
           }
         }
 
-        /**
-         * 關閉視頻播放模態框
-         */
         closeVideoModal() {
           const modal = document.querySelector('ion-modal#video-modal');
           if (modal) {
-            // 停止视频播放
             const videoPlayer = document.getElementById('video-player');
             if (videoPlayer) {
               videoPlayer.src = '';
@@ -2148,18 +1821,13 @@
           }
         }
 
-        /**
-         * 顯示項目詳情
-         */
         async showItemDetail(item) {
           const actionSheet = DOMManager.create('ion-action-sheet');
           actionSheet.header = item.title;
           actionSheet.subHeader = item.subtitle;
           
-          // 构建动作按钮，包含视频播放选项
           const buttons = [];
           
-          // 如果有视频，添加播放视频按钮
           if (item.videoUrl && item.videoUrl.trim() !== '') {
             buttons.push({
               text: '播放視頻',
@@ -2168,21 +1836,18 @@
             });
           }
           
-          // 添加收藏按钮
           buttons.push({
             text: item.favorite ? '取消收藏' : '加入收藏',
             icon: item.favorite ? 'star-outline' : 'star',
             handler: () => this.toggleFavorite(item.id)
           });
           
-          // 添加分享按钮
           buttons.push({
             text: '分享主題',
             icon: 'share', 
             handler: () => this.shareItem(item)
           });
           
-          // 添加取消按钮
           buttons.push({
             text: '取消',
             icon: 'close',
@@ -2195,9 +1860,6 @@
           await actionSheet.present();
         }
 
-        /**
-         * 切換收藏狀態
-         */
         async toggleFavorite(itemId) {
           try {
             const wasFavorite = await this.dataManager.toggleFavorite(itemId, this.authService);
@@ -2208,9 +1870,6 @@
           }
         }
 
-        /**
-         * 處理標籤點擊
-         */
         handleTagClick(tag) {
           const searchbar = DOMManager.query('#main-searchbar');
           if (searchbar) {
@@ -2220,9 +1879,6 @@
           this.showToast(`已篩選標籤: ${tag}`);
         }
 
-        /**
-         * 顯示空狀態（包含重新加載按鈕）
-         */
         showEmptyState() {
           const list = DOMManager.query('#theme-list');
           if (!list) return;
@@ -2239,39 +1895,6 @@
           `;
         }
 
-        /**
-         * 顯示錯誤狀態（包含重新加載按鈕）
-         * @param {string} message 錯誤信息
-         * @param {boolean} isInitial 是否是初始化階段的錯誤
-         */
-        showErrorState(message, isInitial = false) {
-          const targetElement = isInitial 
-            ? DOMManager.query('#init-loading') 
-            : DOMManager.query('#theme-list');
-          
-          if (!targetElement) return;
-          
-          targetElement.innerHTML = `
-            <div class="error-state">
-              <ion-icon name="warning"></ion-icon>
-              <h3>無法加載 API 數據</h3>
-              <p>${message}</p>
-              <p>請點擊下方按鈕重新加載</p>
-              <ion-button fill="solid" color="primary" onclick="app.reloadWikiEntries()">
-                <ion-icon name="refresh" slot="start"></ion-icon>重新請求接口
-              </ion-button>
-            </div>
-          `;
-          
-          // 如果是初始化錯誤，保持錯誤狀態可見
-          if (isInitial) {
-            targetElement.style.display = 'flex';
-          }
-        }
-
-        /**
-         * 更新篩選狀態顯示
-         */
         updateFilterStatus() {
           const statusElement = DOMManager.query('#filter-status');
           if (!statusElement) return;
@@ -2307,15 +1930,12 @@
           }
         }
 
-        /**
-         * 更新統計資訊 - 新增视频统计
-         */
         updateStatistics() {
           const stats = this.dataManager.getStatistics();
           
           const elements = [
             { id: 'total-count', value: stats.total },
-            { id: 'video-count', value: stats.videos },  // 视频数量
+            { id: 'video-count', value: stats.videos },
             { id: 'favorite-count', value: stats.favorites },
             { id: 'category-count', value: stats.categories },
             { id: 'count-all', value: stats.categoryCounts.all },
@@ -2323,7 +1943,7 @@
             { id: 'count-community', value: stats.categoryCounts.community },
             { id: 'count-tools', value: stats.categoryCounts.tools },
             { id: 'count-favorites', value: stats.categoryCounts.favorites },
-            { id: 'count-videos', value: stats.categoryCounts.videos }  // 视频筛选计数
+            { id: 'count-videos', value: stats.categoryCounts.videos }
           ];
 
           elements.forEach(({ id, value }) => {
@@ -2334,9 +1954,6 @@
           });
         }
 
-        /**
-         * 清除所有篩選條件
-         */
         clearAllFilters() {
           const searchbar = DOMManager.query('#main-searchbar');
           const segment = DOMManager.query('#category-segment');
@@ -2348,7 +1965,7 @@
             search: '',
             category: 'all', 
             favorites: false,
-            videos: false  // 清除视频筛选
+            videos: false
           });
           this.render();
           
@@ -2358,16 +1975,10 @@
           }
         }
 
-        /**
-         * 顯示/隱藏載入狀態
-         */
         showLoading(show) {
           this.dataManager.showLoading(show);
         }
 
-        /**
-         * 滾動到頂部
-         */
         scrollToTop() {
           const content = DOMManager.query('ion-content');
           if (content) {
@@ -2375,9 +1986,6 @@
           }
         }
 
-        /**
-         * 關閉所有模態框
-         */
         closeAllModals() {
           const modals = DOMManager.queryAll('ion-modal');
           modals.forEach(modal => {
@@ -2387,16 +1995,10 @@
           });
         }
 
-        /**
-         * 顯示排序選項
-         */
         showSortOptions() {
           this.showToast('排序選項功能', 'primary');
         }
 
-        /**
-         * 分享項目
-         */
         async shareItem(item) {
           if (navigator.share) {
             try {
@@ -2413,18 +2015,12 @@
           }
         }
 
-        /**
-         * 切換主題
-         */
         toggleTheme(isDark) {
           this.currentTheme = isDark ? 'dark' : 'light';
           document.body.classList.toggle('ion-palette-dark', isDark);
           this.showToast(`已切換到${isDark ? '深色' : '淺色'}主題`);
         }
 
-        /**
-         * 獲取標籤顏色
-         */
         getTagColor(tag) {
           const colorMap = {
             '教育': 'success', '詞典': 'success', '學習': 'success',
@@ -2440,9 +2036,6 @@
           return colorMap[tag] || 'primary';
         }
 
-        /**
-         * 顯示 Ionic 吐司
-         */
         async showToast(message, color = 'primary') {
           try {
             const toast = DOMManager.create('ion-toast', {
@@ -2460,40 +2053,30 @@
           }
         }
 
-        /**
-         * 主渲染函數
-         */
         render() {
           const filteredItems = this.dataManager.filterItems();
           this.renderFilteredItems(filteredItems);
           this.updateStatistics();
           this.updateFilterStatus();
           
-          // 控制加載更多提示的顯示
           if (this.dataManager.items.length > 0) {
             DOMManager.toggleVisibility('#load-more-tip', this.dataManager.hasMore);
             DOMManager.toggleVisibility('#load-complete-tip', !this.dataManager.hasMore);
           }
         }
 
-        /**
-         * 銷毀應用程式
-         */
         destroy() {
           this.eventManager.destroy();
         }
       }
 
-      // 全局應用程式實例
       let app;
 
-      // 初始化應用程式
       document.addEventListener('DOMContentLoaded', async () => {
         app = new IonicThemeListApp();
         await app.initializeApp();
       });
 
-      // 頁面卸載時清理
       window.addEventListener('beforeunload', () => {
         if (app) {
           app.destroy();
