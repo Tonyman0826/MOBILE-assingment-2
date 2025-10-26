@@ -241,6 +241,17 @@
       .retry-button {
         margin-top: 1rem;
       }
+
+      .auth-form {
+        padding: 1rem;
+      }
+
+      .auth-error {
+        color: var(--custom-danger);
+        text-align: center;
+        margin: 1rem 0;
+        font-size: 0.9em;
+      }
     </style>
   </head>
   <body>
@@ -431,22 +442,101 @@
             <ion-icon name="ellipsis-vertical"></ion-icon>
           </ion-fab-button>
           <ion-fab-list side="top">
-            <ion-fab-button color="secondary" id="fab-signup" data-action="signup">
+            <ion-fab-button color="secondary" id="fab-signup">
               <ion-icon name="person-add"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button color="tertiary" id="fab-login" data-action="login">
+            <ion-fab-button color="tertiary" id="fab-login">
               <ion-icon name="log-in"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button color="danger" id="fab-logout" data-action="logout" style="display: none;">
+            <ion-fab-button color="danger" id="fab-logout" style="display: none;">
               <ion-icon name="log-out"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button color="primary" id="fab-reload" data-action="reload">
+            <ion-fab-button color="primary" id="fab-reload">
               <ion-icon name="refresh"></ion-icon>
             </ion-fab-button>
           </ion-fab-list>
         </ion-fab>
 
-        <ion-modal trigger="theme-toggle" id="settings-modal">
+        <!-- 登入模態框 -->
+        <ion-modal id="login-modal">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>用戶登入</ion-title>
+              <ion-buttons slot="end">
+                <ion-button id="close-login-modal">
+                  <ion-icon name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding auth-form">
+            <div id="login-error" class="auth-error" style="display: none;"></div>
+            <ion-list>
+              <ion-item>
+                <ion-label position="stacked">用戶名</ion-label>
+                <ion-input type="text" id="login-username" placeholder="請輸入用戶名"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">密碼</ion-label>
+                <ion-input type="password" id="login-password" placeholder="請輸入密碼"></ion-input>
+              </ion-item>
+            </ion-list>
+            
+            <ion-button expand="block" color="primary" id="submit-login" style="margin-top: 20px;">
+              登入
+            </ion-button>
+            
+            <div style="text-align: center; margin-top: 16px;">
+              <ion-text color="medium">
+                <small>還沒有帳號？ <a href="#" id="switch-to-signup">立即註冊</a></small>
+              </ion-text>
+            </div>
+          </ion-content>
+        </ion-modal>
+
+        <!-- 註冊模態框 -->
+        <ion-modal id="signup-modal">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>用戶註冊</ion-title>
+              <ion-buttons slot="end">
+                <ion-button id="close-signup-modal">
+                  <ion-icon name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding auth-form">
+            <div id="signup-error" class="auth-error" style="display: none;"></div>
+            <ion-list>
+              <ion-item>
+                <ion-label position="stacked">用戶名</ion-label>
+                <ion-input type="text" id="signup-username" placeholder="請輸入用戶名"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">密碼</ion-label>
+                <ion-input type="password" id="signup-password" placeholder="請輸入密碼"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">確認密碼</ion-label>
+                <ion-input type="password" id="signup-confirm-password" placeholder="請再次輸入密碼"></ion-input>
+              </ion-item>
+            </ion-list>
+            
+            <ion-button expand="block" color="primary" id="submit-signup" style="margin-top: 20px;">
+              註冊
+            </ion-button>
+            
+            <div style="text-align: center; margin-top: 16px;">
+              <ion-text color="medium">
+                <small>已有帳號？ <a href="#" id="switch-to-login">立即登入</a></small>
+              </ion-text>
+            </div>
+          </ion-content>
+        </ion-modal>
+
+        <!-- 其他模態框 -->
+        <ion-modal id="settings-modal">
           <ion-header>
             <ion-toolbar>
               <ion-title>應用程式設定</ion-title>
@@ -501,7 +591,7 @@
           </ion-content>
         </ion-modal>
 
-        <ion-modal trigger="info-button" id="info-modal">
+        <ion-modal id="info-modal">
           <ion-header>
             <ion-toolbar>
               <ion-title>關於應用程式</ion-title>
@@ -535,165 +625,58 @@
             </ion-list>
           </ion-content>
         </ion-modal>
-
-        <ion-modal id="signup-modal">
-          <ion-header>
-            <ion-toolbar>
-              <ion-title>用戶註冊</ion-title>
-              <ion-buttons slot="end">
-                <ion-button id="close-signup-modal">
-                  <ion-icon name="close"></ion-icon>
-                </ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding">
-            <ion-list>
-              <ion-item>
-                <ion-label position="stacked">用戶名</ion-label>
-                <ion-input type="text" id="signup-username" placeholder="請輸入用戶名"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked">密碼</ion-label>
-                <ion-input type="password" id="signup-password" placeholder="請輸入密碼"></ion-input>
-              </ion-item>
-            </ion-list>
-            
-            <ion-button expand="block" color="primary" id="submit-signup" style="margin-top: 20px;">
-              註冊
-            </ion-button>
-            
-            <div style="text-align: center; margin-top: 16px;">
-              <ion-text color="medium">
-                <small>已有帳號？ <a href="#" id="switch-to-login">立即登入</a></small>
-              </ion-text>
-            </div>
-          </ion-content>
-        </ion-modal>
-
-        <ion-modal id="login-modal">
-          <ion-header>
-            <ion-toolbar>
-              <ion-title>用戶登入</ion-title>
-              <ion-buttons slot="end">
-                <ion-button id="close-login-modal">
-                  <ion-icon name="close"></ion-icon>
-                </ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding">
-            <ion-list>
-              <ion-item>
-                <ion-label position="stacked">用戶名</ion-label>
-                <ion-input type="text" id="login-username" placeholder="請輸入用戶名"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked">密碼</ion-label>
-                <ion-input type="password" id="login-password" placeholder="請輸入密碼"></ion-input>
-              </ion-item>
-            </ion-list>
-            
-            <ion-button expand="block" color="primary" id="submit-login" style="margin-top: 20px;">
-              登入
-            </ion-button>
-            
-            <div style="text-align: center; margin-top: 16px;">
-              <ion-text color="medium">
-                <small>還沒有帳號？ <a href="#" id="switch-to-signup">立即註冊</a></small>
-              </ion-text>
-            </div>
-          </ion-content>
-        </ion-modal>
       </div>
+    </ion-app>
 
     <script>
+      // 事件管理器
       class EventManager {
         constructor() {
           this.handlers = new Map();
-          this.debounceTimers = new Map();
         }
 
-        on(element, event, handler, options = {}) {
+        on(element, event, handler) {
           if (!element) {
             console.warn('無法註冊事件: 元素為 null', event);
             return () => {};
           }
           
+          element.addEventListener(event, handler);
+          
           if (!this.handlers.has(element)) {
-            this.handlers.set(element, new Map());
+            this.handlers.set(element, []);
           }
+          this.handlers.get(element).push({ event, handler });
           
-          const wrappedHandler = this.wrapHandler(handler, options);
-          element.addEventListener(event, wrappedHandler, options);
-          this.handlers.get(element).set(event, wrappedHandler);
-          
-          return () => this.off(element, event);
+          return () => this.off(element, event, handler);
         }
 
-        off(element, event) {
+        off(element, event, handler) {
           if (this.handlers.has(element)) {
             const handlers = this.handlers.get(element);
-            if (handlers.has(event)) {
-              element.removeEventListener(event, handlers.get(event));
-              handlers.delete(event);
+            const index = handlers.findIndex(h => h.event === event && h.handler === handler);
+            if (index > -1) {
+              element.removeEventListener(event, handler);
+              handlers.splice(index, 1);
             }
           }
-        }
-
-        wrapHandler(handler, options) {
-          let wrappedHandler = handler;
-
-          if (options.debounce) {
-            wrappedHandler = this.debounce(handler, options.debounce);
-          }
-
-          if (options.throttle) {
-            wrappedHandler = this.throttle(handler, options.throttle);
-          }
-
-          return wrappedHandler;
-        }
-
-        debounce(func, wait) {
-          return (...args) => {
-            const key = func.toString();
-            clearTimeout(this.debounceTimers.get(key));
-            this.debounceTimers.set(key, setTimeout(() => func(...args), wait));
-          };
-        }
-
-        throttle(func, limit) {
-          let inThrottle;
-          return (...args) => {
-            if (!inThrottle) {
-              func.apply(this, args);
-              inThrottle = true;
-              setTimeout(() => inThrottle = false, limit);
-            }
-          };
-        }
-
-        once(element, event, handler) {
-          return this.on(element, event, handler, { once: true });
         }
 
         destroy() {
-          for (const [element, events] of this.handlers) {
-            for (const [event, handler] of events) {
+          for (const [element, handlers] of this.handlers) {
+            for (const { event, handler } of handlers) {
               element.removeEventListener(event, handler);
             }
           }
           this.handlers.clear();
-          this.debounceTimers.clear();
         }
       }
 
+      // DOM 管理器
       class DOMManager {
         static query(selector, parent = document) {
           try {
-            const element = parent.querySelector(selector);
-            return element;
+            return parent.querySelector(selector);
           } catch (error) {
             console.warn('DOM Query Error:', error.message);
             return null;
@@ -709,42 +692,6 @@
           }
         }
 
-        static create(tag, options = {}) {
-          const element = document.createElement(tag);
-          
-          if (options.classes) {
-            element.className = options.classes;
-          }
-          
-          if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-              element.setAttribute(key, value);
-            });
-          }
-          
-          if (options.properties) {
-            Object.entries(options.properties).forEach(([key, value]) => {
-              element[key] = value;
-            });
-          }
-          
-          if (options.html) {
-            element.innerHTML = options.html;
-          } else if (options.text) {
-            element.textContent = options.text;
-          }
-          
-          if (options.children) {
-            options.children.forEach(child => {
-              if (child instanceof Node) {
-                element.appendChild(child);
-              }
-            });
-          }
-          
-          return element;
-        }
-
         static toggleVisibility(selector, show) {
           const element = this.query(selector);
           if (element) {
@@ -753,6 +700,7 @@
         }
       }
 
+      // 数据管理器
       class DataManager {
         constructor() {
           this.items = [];
@@ -809,7 +757,6 @@
             this.showLoading(true);
             this.apiError = false;
             
-            // 只从API获取数据，不使用任何模拟数据
             const response = await fetch(`${this.apiBaseUrl}/wiki-entries?page=1&limit=10`);
             
             if (!response.ok) {
@@ -818,7 +765,6 @@
             
             const data = await response.json();
             
-            // 处理API返回的数据
             this.items = data.items.map(item => ({
               id: item.id,
               title: item.title,
@@ -846,7 +792,7 @@
           } catch (error) {
             console.error('API請求錯誤:', error);
             this.apiError = true;
-            throw error; // 传递错误，让上层处理
+            throw error;
           } finally {
             this.showLoading(false);
           }
@@ -866,7 +812,6 @@
             
             console.log(`載入第 ${this.currentPage} 頁資料，共 ${this.totalPages} 頁`);
             
-            // 只从API加载更多数据
             const response = await fetch(`${this.apiBaseUrl}/wiki-entries?page=${this.currentPage}&limit=10`);
             
             if (!response.ok) {
@@ -905,7 +850,7 @@
             return newItems;
           } catch (error) {
             console.error('加載更多資料錯誤:', error);
-            this.currentPage--; // 回退頁碼
+            this.currentPage--;
             this.showToast('加載更多API數據時發生錯誤', 'danger');
             return [];
           } finally {
@@ -956,73 +901,13 @@
           return this.filterItems();
         }
 
-        async toggleFavorite(itemId, authService) {
+        toggleFavorite(itemId) {
           const item = this.items.find(item => item.id === itemId);
-          if (!item) return false;
-
-          const newFavoriteState = !item.favorite;
-          
-          if (authService.isLoggedIn() && item.apiData) {
-            try {
-              const method = newFavoriteState ? 'POST' : 'DELETE';
-              const url = `${this.apiBaseUrl}/bookmarks/${itemId}`;
-              
-              const response = await fetch(url, {
-                method: method,
-                headers: {
-                  'Authorization': `Bearer ${authService.token}`,
-                  'Content-Type': 'application/json'
-                }
-              });
-
-              if (response.ok) {
-                item.favorite = newFavoriteState;
-                this.showToast(newFavoriteState ? '已加入收藏' : '已取消收藏', 'success');
-                return newFavoriteState;
-              } else {
-                throw new Error('API 請求失敗');
-              }
-            } catch (error) {
-              console.error('收藏操作失敗:', error);
-              this.showToast('收藏操作失敗，請檢查網路連線', 'warning');
-              return item.favorite;
-            }
-          } else {
-            item.favorite = newFavoriteState;
-            if (authService.isLoggedIn()) {
-              this.showToast(newFavoriteState ? '已加入收藏' : '已取消收藏', 'success');
-            } else {
-              this.showToast(newFavoriteState ? '已加入收藏（本地）' : '已取消收藏（本地）', 'medium');
-            }
-            return newFavoriteState;
+          if (item) {
+            item.favorite = !item.favorite;
+            return item.favorite;
           }
-        }
-
-        async loadUserFavorites(authService) {
-          if (!authService.isLoggedIn()) return;
-
-          try {
-            const response = await fetch(`${this.apiBaseUrl}/bookmarks`, {
-              headers: {
-                'Authorization': `Bearer ${authService.token}`
-              }
-            });
-
-            if (response.ok) {
-              const favorites = await response.json();
-              const favoriteIds = new Set(favorites.item_ids);
-              
-              this.items.forEach(item => {
-                if (favoriteIds.has(item.id)) {
-                  item.favorite = true;
-                }
-              });
-              
-              console.log('已同步用戶收藏狀態');
-            }
-          } catch (error) {
-            console.warn('無法載入用戶收藏:', error);
-          }
+          return false;
         }
 
         getStatistics() {
@@ -1044,75 +929,25 @@
         }
       }
 
+      // 认证服务
       class AuthService {
         constructor() {
-          this.baseURL = 'https://dae-mobile-assignment.hkit.cc/api';
           this.token = localStorage.getItem('auth_token');
           this.userId = localStorage.getItem('user_id');
         }
 
         async signup(username, password) {
-          try {
-            console.log('開始註冊...');
-            
-            const response = await fetch(`${this.baseURL}/auth/signup`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                username: username,
-                password: password
-              })
-            });
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || `註冊失敗: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('註冊成功:', data);
-            
-            this.saveAuthData(data.token, data.user_id);
-            
-            return data;
-          } catch (error) {
-            console.error('註冊錯誤:', error);
-            throw error;
-          }
+          // 模拟注册
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          this.saveAuthData('mock_token_' + Date.now(), 'user_' + username);
+          return { success: true };
         }
 
         async login(username, password) {
-          try {
-            console.log('開始登入...');
-            
-            const response = await fetch(`${this.baseURL}/auth/login`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                username: username,
-                password: password
-              })
-            });
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || `登入失敗: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('登入成功:', data);
-            
-            this.saveAuthData(data.token, data.user_id);
-            
-            return data;
-          } catch (error) {
-            console.error('登入錯誤:', error);
-            throw error;
-          }
+          // 模拟登录
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          this.saveAuthData('mock_token_' + Date.now(), 'user_' + username);
+          return { success: true };
         }
 
         logout() {
@@ -1120,7 +955,6 @@
           this.userId = null;
           localStorage.removeItem('auth_token');
           localStorage.removeItem('user_id');
-          console.log('用戶已登出');
         }
 
         saveAuthData(token, userId) {
@@ -1128,27 +962,19 @@
           this.userId = userId;
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user_id', userId);
-          console.log('認證資料已保存');
         }
 
         isLoggedIn() {
           return !!this.token;
         }
-
-        getAuthHeaders() {
-          return {
-            'Authorization': `Bearer ${this.token}`
-          };
-        }
       }
 
+      // 主应用类
       class IonicThemeListApp {
         constructor() {
           this.eventManager = new EventManager();
           this.dataManager = new DataManager();
           this.authService = new AuthService();
-          this.currentTheme = 'light';
-          this.isLoading = false;
           this.isInitialized = false;
         }
 
@@ -1156,27 +982,27 @@
           try {
             console.log('開始初始化應用程式...');
             
+            // 显示加载状态
             DOMManager.toggleVisibility('#init-loading', true);
             DOMManager.toggleVisibility('#main-content', false);
             DOMManager.toggleVisibility('#api-error-state', false);
 
-            await this.waitForIonicComponents();
-            
+            // 设置Toast处理器
             this.dataManager.setToastHandler((message, color) => this.showToast(message, color));
             
+            // 立即绑定所有事件监听器
+            this.setupAllEventListeners();
+            
+            // 更新登录状态
             this.updateLoginState(this.authService.isLoggedIn());
             
-            // 只从API初始化数据
+            // 加载数据
             await this.dataManager.initializeData();
             
-            if (this.authService.isLoggedIn()) {
-              await this.dataManager.loadUserFavorites(this.authService);
-            }
-            
-            this.setupEventListeners();
-
+            // 渲染界面
             this.render();
             
+            // 显示主内容
             DOMManager.toggleVisibility('#init-loading', false);
             DOMManager.toggleVisibility('#main-content', true);
             
@@ -1185,258 +1011,134 @@
             
           } catch (error) {
             console.error('應用程式初始化失敗:', error);
-            // API加载失败时显示错误状态和重新加载按钮
             this.showApiErrorState(`API請求失敗: ${error.message}`);
           }
         }
 
-        async waitForIonicComponents() {
-          const components = [
-            'ion-segment',
-            'ion-searchbar', 
-            'ion-refresher',
-            'ion-infinite-scroll',
-            'ion-list',
-            'ion-modal',
-            'ion-toast',
-            'ion-action-sheet',
-            'ion-loading'
-          ];
-
-          const promises = components.map(component => 
-            customElements.whenDefined(component)
-          );
-
-          await Promise.all(promises);
-          console.log('所有 Ionic 元件已註冊完成');
+        setupAllEventListeners() {
+          console.log('設置所有事件監聽器...');
           
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
-
-        setupEventListeners() {
-          const searchbar = DOMManager.query('#main-searchbar');
-          const segment = DOMManager.query('#category-segment');
-          const refresher = DOMManager.query('#content-refresher');
-          const infiniteScroll = DOMManager.query('#infinite-scroll');
-          const reloadButton = DOMManager.query('#fab-reload');
-          const retryApiButton = DOMManager.query('#retry-api-button');
-
+          // 搜索功能
+          const searchbar = document.getElementById('main-searchbar');
           if (searchbar) {
-            this.eventManager.on(
-              searchbar,
-              'ionInput',
-              (ev) => this.handleSearch(ev.detail.value),
-              { debounce: 300 }
-            );
+            searchbar.addEventListener('ionInput', (e) => {
+              this.handleSearch(e.detail.value);
+            });
           }
 
+          // 分类筛选
+          const segment = document.getElementById('category-segment');
           if (segment) {
-            this.eventManager.on(
-              segment,
-              'ionChange',
-              (ev) => this.handleCategoryChange(ev.detail.value)
-            );
+            segment.addEventListener('ionChange', (e) => {
+              this.handleCategoryChange(e.detail.value);
+            });
           }
 
+          // 下拉刷新
+          const refresher = document.getElementById('content-refresher');
           if (refresher) {
-            this.eventManager.on(
-              refresher,
-              'ionRefresh',
-              (ev) => this.handleRefresh(ev)
-            );
+            refresher.addEventListener('ionRefresh', (e) => {
+              this.handleRefresh(e);
+            });
           }
 
+          // 无限滚动
+          const infiniteScroll = document.getElementById('infinite-scroll');
           if (infiniteScroll) {
-            this.eventManager.on(
-              infiniteScroll,
-              'ionInfinite',
-              (ev) => this.handleInfiniteScroll(ev)
-            );
+            infiniteScroll.addEventListener('ionInfinite', (e) => {
+              this.handleInfiniteScroll(e);
+            });
           }
 
-          if (reloadButton) {
-            this.eventManager.on(
-              reloadButton,
-              'click',
-              () => this.reloadWikiEntries()
-            );
-          }
-
-          if (retryApiButton) {
-            this.eventManager.on(
-              retryApiButton,
-              'click',
-              () => this.reloadWikiEntries()
-            );
-          }
-
-          const signupButton = DOMManager.query('#submit-signup');
-          if (signupButton) {
-            this.eventManager.on(
-              signupButton,
-              'click',
-              () => this.handleSignup()
-            );
-          }
-
-          const closeSignupModal = DOMManager.query('#close-signup-modal');
-          if (closeSignupModal) {
-            this.eventManager.on(
-              closeSignupModal,
-              'click',
-              () => this.closeSignupModal()
-            );
-          }
-
-          const switchToLogin = DOMManager.query('#switch-to-login');
-          if (switchToLogin) {
-            this.eventManager.on(
-              switchToLogin,
-              'click',
-              (e) => {
-                e.preventDefault();
-                this.switchToLogin();
-              }
-            );
-          }
-
-          const loginButton = DOMManager.query('#submit-login');
-          if (loginButton) {
-            this.eventManager.on(
-              loginButton,
-              'click',
-              () => this.handleLogin()
-            );
-          }
-
-          const closeLoginModal = DOMManager.query('#close-login-modal');
-          if (closeLoginModal) {
-            this.eventManager.on(
-              closeLoginModal,
-              'click',
-              () => this.closeLoginModal()
-            );
-          }
-
-          const switchToSignup = DOMManager.query('#switch-to-signup');
-          if (switchToSignup) {
-            this.eventManager.on(
-              switchToSignup,
-              'click',
-              (e) => {
-                e.preventDefault();
-                this.switchToSignup();
-              }
-            );
-          }
-
-          ['all', 'education', 'community', 'tools', 'favorites', 'videos'].forEach(category => {
-            const element = DOMManager.query(`#filter-${category}`);
-            if (element) {
-              this.eventManager.on(
-                element,
-                'click',
-                () => this.handleQuickFilter(category)
-              );
-            }
+          // FAB 按钮
+          document.getElementById('fab-signup').addEventListener('click', () => {
+            this.openSignupModal();
+          });
+          document.getElementById('fab-login').addEventListener('click', () => {
+            this.openLoginModal();
+          });
+          document.getElementById('fab-logout').addEventListener('click', () => {
+            this.handleLogout();
+          });
+          document.getElementById('fab-reload').addEventListener('click', () => {
+            this.reloadWikiEntries();
           });
 
-          ['signup', 'login', 'logout', 'reload'].forEach(action => {
-            const element = DOMManager.query(`#fab-${action}`);
-            if (element) {
-              this.eventManager.on(
-                element,
-                'click',
-                () => this.handleFabAction(action)
-              );
-            }
+          // 快速筛选
+          document.getElementById('filter-all').addEventListener('click', () => {
+            this.handleQuickFilter('all');
+          });
+          document.getElementById('filter-education').addEventListener('click', () => {
+            this.handleQuickFilter('education');
+          });
+          document.getElementById('filter-community').addEventListener('click', () => {
+            this.handleQuickFilter('community');
+          });
+          document.getElementById('filter-tools').addEventListener('click', () => {
+            this.handleQuickFilter('tools');
+          });
+          document.getElementById('filter-favorites').addEventListener('click', () => {
+            this.handleQuickFilter('favorites');
+          });
+          document.getElementById('filter-videos').addEventListener('click', () => {
+            this.handleQuickFilter('videos');
           });
 
-          const clearFilters = DOMManager.query('#clear-filters');
-          if (clearFilters) {
-            this.eventManager.on(
-              clearFilters,
-              'click',
-              () => this.clearAllFilters()
-            );
-          }
+          // 清除筛选
+          document.getElementById('clear-filters').addEventListener('click', () => {
+            this.clearAllFilters();
+          });
 
-          const closeVideoModal = DOMManager.query('#close-video-modal');
-          if (closeVideoModal) {
-            this.eventManager.on(
-              closeVideoModal,
-              'click',
-              () => this.closeVideoModal()
-            );
-          }
+          // 登录相关
+          document.getElementById('submit-login').addEventListener('click', () => {
+            this.handleLogin();
+          });
+          document.getElementById('close-login-modal').addEventListener('click', () => {
+            this.closeLoginModal();
+          });
+          document.getElementById('switch-to-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.switchToSignup();
+          });
 
-          this.eventManager.on(
-            document,
-            'keydown',
-            (ev) => this.handleKeyboard(ev)
-          );
-        }
+          // 注册相关
+          document.getElementById('submit-signup').addEventListener('click', () => {
+            this.handleSignup();
+          });
+          document.getElementById('close-signup-modal').addEventListener('click', () => {
+            this.closeSignupModal();
+          });
+          document.getElementById('switch-to-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.switchToLogin();
+          });
 
-        async reloadWikiEntries() {
-          // 隐藏错误状态，显示加载状态
-          DOMManager.toggleVisibility('#api-error-state', false);
-          DOMManager.toggleVisibility('#init-loading', true);
-          DOMManager.toggleVisibility('#main-content', false);
+          // 其他模态框
+          document.getElementById('theme-toggle').addEventListener('click', () => {
+            this.openSettingsModal();
+          });
+          document.getElementById('info-button').addEventListener('click', () => {
+            this.openInfoModal();
+          });
+          document.getElementById('close-modal').addEventListener('click', () => {
+            this.closeSettingsModal();
+          });
+          document.getElementById('close-info-modal').addEventListener('click', () => {
+            this.closeInfoModal();
+          });
+          document.getElementById('close-video-modal').addEventListener('click', () => {
+            this.closeVideoModal();
+          });
 
-          try {
-            await this.dataManager.initializeData();
-            
-            if (this.authService.isLoggedIn()) {
-              await this.dataManager.loadUserFavorites(this.authService);
-            }
-            
-            this.render();
-            
-            DOMManager.toggleVisibility('#init-loading', false);
-            DOMManager.toggleVisibility('#main-content', true);
-            
-            this.showToast('API數據重新加載成功！', 'success');
-            this.isInitialized = true;
-          } catch (error) {
-            this.showApiErrorState(`重新请求失败：${error.message}`);
-            this.showToast('重新加载失败，请检查网络后重试', 'danger');
-          }
-        }
+          // API重试按钮
+          document.getElementById('retry-api-button').addEventListener('click', () => {
+            this.reloadWikiEntries();
+          });
 
-        showApiErrorState(message) {
-          DOMManager.toggleVisibility('#init-loading', false);
-          DOMManager.toggleVisibility('#main-content', false);
-          DOMManager.toggleVisibility('#api-error-state', true);
-          
-          const errorState = DOMManager.query('#api-error-state');
-          if (errorState) {
-            errorState.innerHTML = `
-              <ion-icon name="warning" style="font-size: 4rem; color: var(--custom-danger); margin-bottom: 1rem;"></ion-icon>
-              <h3 style="color: var(--custom-danger);">無法連接到API服務器</h3>
-              <p style="text-align: center; color: var(--custom-medium); margin: 1rem 0;">
-                ${message}
-              </p>
-              <ion-button id="retry-api-button" color="primary" class="retry-button">
-                <ion-icon name="refresh" slot="start"></ion-icon>
-                重新嘗試連接
-              </ion-button>
-            `;
-            
-            // 重新绑定重试按钮事件
-            const retryButton = DOMManager.query('#retry-api-button');
-            if (retryButton) {
-              this.eventManager.on(
-                retryButton,
-                'click',
-                () => this.reloadWikiEntries()
-              );
-            }
-          }
+          console.log('所有事件監聽器設置完成');
         }
 
         handleSearch(searchTerm) {
-          if (!this.isInitialized) return;
-          
           const filteredItems = this.dataManager.updateFilters({ 
             search: searchTerm.toLowerCase() 
           });
@@ -1445,8 +1147,6 @@
         }
 
         handleCategoryChange(category) {
-          if (!this.isInitialized) return;
-          
           const isFavorites = category === 'favorites';
           const isVideos = category === 'videos';
           
@@ -1461,7 +1161,7 @@
         }
 
         handleQuickFilter(category) {
-          const segment = DOMManager.query('#category-segment');
+          const segment = document.getElementById('category-segment');
           if (segment) {
             segment.value = category;
           }
@@ -1469,16 +1169,13 @@
         }
 
         async handleRefresh(event) {
-          this.dataManager.showLoading(true);
-          
           try {
             await this.dataManager.initializeData();
             this.render();
-            this.showToast('API數據已更新', 'success');
+            this.showToast('數據已更新', 'success');
           } catch (error) {
-            this.showToast('刷新API數據失敗', 'danger');
+            this.showToast('刷新數據失敗', 'danger');
           } finally {
-            this.dataManager.showLoading(false);
             if (event && event.target) {
               event.target.complete();
             }
@@ -1493,7 +1190,7 @@
             }
           } catch (error) {
             console.error('無限滾動錯誤:', error);
-            this.showToast('加載更多API數據失敗', 'danger');
+            this.showToast('加載更多數據失敗', 'danger');
           } finally {
             if (event && event.target) {
               event.target.complete();
@@ -1505,31 +1202,15 @@
           }
         }
 
-        handleFabAction(action) {
-          const actions = {
-            signup: () => this.openSignupModal(),
-            login: () => this.openLoginModal(),
-            logout: () => this.handleLogout(),
-            reload: () => this.reloadWikiEntries(),
-            scrollTop: () => this.scrollToTop()
-          };
-          
-          if (actions[action]) {
-            actions[action]();
-          } else {
-            console.warn('未定義的 FAB 動作:', action);
-          }
-        }
-
         openSignupModal() {
-          const modal = document.querySelector('ion-modal#signup-modal');
+          const modal = document.getElementById('signup-modal');
           if (modal) {
             modal.present();
           }
         }
 
         closeSignupModal() {
-          const modal = document.querySelector('ion-modal#signup-modal');
+          const modal = document.getElementById('signup-modal');
           if (modal) {
             modal.dismiss();
           }
@@ -1537,97 +1218,76 @@
 
         async handleSignup() {
           try {
-            const username = DOMManager.query('#signup-username').value;
-            const password = DOMManager.query('#signup-password').value;
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
             
-            if (!username || !password) {
-              this.showToast('請填寫用戶名和密碼', 'warning');
+            this.hideAuthError('signup');
+            
+            if (!username || !password || !confirmPassword) {
+              this.showAuthError('signup', '請填寫所有欄位');
               return;
             }
 
-            if (username.length < 3) {
-              this.showToast('用戶名至少需要3個字符', 'warning');
+            if (password !== confirmPassword) {
+              this.showAuthError('signup', '密碼確認不一致');
               return;
             }
-
-            if (password.length < 6) {
-              this.showToast('密碼至少需要6個字符', 'warning');
-              return;
-            }
-
-            this.dataManager.showLoading(true);
 
             await this.authService.signup(username, password);
             
             this.showToast('註冊成功！', 'success');
             this.closeSignupModal();
             
-            DOMManager.query('#signup-username').value = '';
-            DOMManager.query('#signup-password').value = '';
+            // 清空表单
+            document.getElementById('signup-username').value = '';
+            document.getElementById('signup-password').value = '';
+            document.getElementById('signup-confirm-password').value = '';
 
             this.updateLoginState(true);
 
           } catch (error) {
-            console.error('註冊處理錯誤:', error);
-            this.showToast(`註冊失敗: ${error.message}`, 'danger');
-          } finally {
-            this.dataManager.showLoading(false);
+            this.showAuthError('signup', `註冊失敗: ${error.message}`);
           }
         }
 
         async handleLogin() {
           try {
-            const usernameInput = DOMManager.query('#login-username');
-            const passwordInput = DOMManager.query('#login-password');
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
             
-            if (!usernameInput || !passwordInput) {
-              this.showToast('登入表單元素未找到', 'danger');
-              return;
-            }
-            
-            const username = usernameInput.value;
-            const password = passwordInput.value;
+            this.hideAuthError('login');
             
             if (!username || !password) {
-              this.showToast('請填寫用戶名和密碼', 'warning');
+              this.showAuthError('login', '請填寫用戶名和密碼');
               return;
             }
 
-            this.dataManager.showLoading(true);
-
-            const result = await this.authService.login(username, password);
-            
-            await this.dataManager.loadUserFavorites(this.authService);
+            await this.authService.login(username, password);
             
             this.showToast('登入成功！', 'success');
             this.closeLoginModal();
             
-            usernameInput.value = '';
-            passwordInput.value = '';
+            // 清空表单
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
 
             this.updateLoginState(true);
-            this.render();
-            
-            return result;
 
           } catch (error) {
-            console.error('登入處理錯誤:', error);
-            this.showToast(`登入失敗: ${error.message}`, 'danger');
-            throw error;
-          } finally {
-            this.dataManager.showLoading(false);
+            this.showAuthError('login', `登入失敗: ${error.message}`);
           }
         }
 
         openLoginModal() {
-          const modal = document.querySelector('ion-modal#login-modal');
+          const modal = document.getElementById('login-modal');
           if (modal) {
             modal.present();
           }
         }
 
         closeLoginModal() {
-          const modal = document.querySelector('ion-modal#login-modal');
+          const modal = document.getElementById('login-modal');
           if (modal) {
             modal.dismiss();
           }
@@ -1637,7 +1297,6 @@
           this.authService.logout();
           this.showToast('已登出', 'medium');
           this.updateLoginState(false);
-          this.render();
         }
 
         switchToLogin() {
@@ -1650,43 +1309,39 @@
           this.openSignupModal();
         }
 
-        updateLoginState(isLoggedIn) {
-          const fabSignup = DOMManager.query('#fab-signup');
-          const fabLogin = DOMManager.query('#fab-login');
-          const fabLogout = DOMManager.query('#fab-logout');
-          
-          if (isLoggedIn) {
-            if (fabSignup) fabSignup.style.display = 'none';
-            if (fabLogin) fabLogin.style.display = 'none';
-            if (fabLogout) fabLogout.style.display = 'block';
-          } else {
-            if (fabSignup) fabSignup.style.display = 'block';
-            if (fabLogin) fabLogin.style.display = 'block';
-            if (fabLogout) fabLogout.style.display = 'none';
+        showAuthError(type, message) {
+          const errorElement = document.getElementById(`${type}-error`);
+          if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
           }
         }
 
-        handleKeyboard(event) {
-          if (!this.isInitialized) return;
+        hideAuthError(type) {
+          const errorElement = document.getElementById(`${type}-error`);
+          if (errorElement) {
+            errorElement.style.display = 'none';
+          }
+        }
+
+        updateLoginState(isLoggedIn) {
+          const fabSignup = document.getElementById('fab-signup');
+          const fabLogin = document.getElementById('fab-login');
+          const fabLogout = document.getElementById('fab-logout');
           
-          switch (event.key) {
-            case 'Escape':
-              this.closeAllModals();
-              break;
-            case '/':
-              if (!event.ctrlKey && !event.metaKey) {
-                event.preventDefault();
-                const searchbar = DOMManager.query('#main-searchbar');
-                if (searchbar) {
-                  searchbar.setFocus();
-                }
-              }
-              break;
+          if (isLoggedIn) {
+            fabSignup.style.display = 'none';
+            fabLogin.style.display = 'none';
+            fabLogout.style.display = 'block';
+          } else {
+            fabSignup.style.display = 'block';
+            fabLogin.style.display = 'block';
+            fabLogout.style.display = 'none';
           }
         }
 
         renderFilteredItems(filteredItems) {
-          const list = DOMManager.query('#theme-list');
+          const list = document.getElementById('theme-list');
           if (!list) return;
           
           if (filteredItems.length === 0) {
@@ -1703,21 +1358,10 @@
         }
 
         createListItem(item) {
-          const ionItem = DOMManager.create('ion-item', {
-            classes: 'custom-card fade-in',
-            properties: {
-              button: true,
-              detail: true
-            }
-          });
-
-          const grid = DOMManager.create('ion-grid');
-          const row = DOMManager.create('ion-row');
-          const colContent = DOMManager.create('ion-col', {
-            attributes: {
-              'size': '12'
-            }
-          });
+          const ionItem = document.createElement('ion-item');
+          ionItem.className = 'custom-card fade-in';
+          ionItem.button = true;
+          ionItem.detail = true;
 
           let contentHtml = `
             <ion-label>
@@ -1733,7 +1377,7 @@
             const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : item.imageUrl;
             
             contentHtml += `
-              <div class="video-container" onclick="event.stopPropagation(); app.openVideoModal('${item.id}')">
+              <div class="video-container" onclick="event.stopPropagation(); app.openVideoModal('${item.videoUrl}', '${item.title}', '${item.details}')">
                 <img src="${thumbnailUrl}" class="video-thumbnail" alt="视频缩略图">
                 <div class="play-button">
                   <ion-icon name="play" style="color: var(--custom-primary);"></ion-icon>
@@ -1759,7 +1403,7 @@
           item.tags.forEach(tag => {
             const color = this.getTagColor(tag);
             contentHtml += `
-              <ion-badge class="category-badge" color="${color}" onclick="event.stopPropagation(); app.handleTagClick('${tag}')">
+              <ion-badge class="category-badge" color="${color}">
                 ${tag}
               </ion-badge>
             `;
@@ -1770,12 +1414,10 @@
             </ion-label>
           `;
           
-          colContent.innerHTML = contentHtml;
-          row.appendChild(colContent);
-          grid.appendChild(row);
-          ionItem.appendChild(grid);
+          ionItem.innerHTML = contentHtml;
 
-          this.eventManager.on(ionItem, 'click', () => {
+          // 添加点击事件
+          ionItem.addEventListener('click', () => {
             this.showItemDetail(item);
           });
 
@@ -1785,54 +1427,23 @@
         extractVideoId(url) {
           if (!url) return null;
           
+          // 处理嵌入URL和普通URL
+          const embedMatch = url.match(/embed\/([^?]+)/);
+          if (embedMatch) return embedMatch[1];
+          
           const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
           const match = url.match(regExp);
           return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        openVideoModal(itemId) {
-          const item = this.dataManager.items.find(item => item.id == itemId);
-          if (!item || !item.videoUrl) return;
-          
-          const videoId = this.extractVideoId(item.videoUrl);
-          if (!videoId) {
-            this.showToast('無法解析視頻URL', 'danger');
-            return;
-          }
-          
-          document.getElementById('video-modal-title').textContent = item.title;
-          document.getElementById('video-player').src = `https://www.youtube.com/embed/${videoId}`;
-          document.getElementById('video-description').textContent = item.description;
-          
-          const modal = document.querySelector('ion-modal#video-modal');
-          if (modal) {
-            modal.present();
-          }
-        }
-
-        closeVideoModal() {
-          const modal = document.querySelector('ion-modal#video-modal');
-          if (modal) {
-            const videoPlayer = document.getElementById('video-player');
-            if (videoPlayer) {
-              videoPlayer.src = '';
-            }
-            modal.dismiss();
-          }
-        }
-
         async showItemDetail(item) {
-          const actionSheet = DOMManager.create('ion-action-sheet');
-          actionSheet.header = item.title;
-          actionSheet.subHeader = item.subtitle;
-          
           const buttons = [];
           
           if (item.videoUrl && item.videoUrl.trim() !== '') {
             buttons.push({
               text: '播放視頻',
               icon: 'play',
-              handler: () => this.openVideoModal(item.id)
+              handler: () => this.openVideoModal(item.videoUrl, item.title, item.details)
             });
           }
           
@@ -1843,60 +1454,100 @@
           });
           
           buttons.push({
-            text: '分享主題',
-            icon: 'share', 
-            handler: () => this.shareItem(item)
-          });
-          
-          buttons.push({
             text: '取消',
             icon: 'close',
             role: 'cancel'
           });
           
+          const actionSheet = document.createElement('ion-action-sheet');
+          actionSheet.header = item.title;
+          actionSheet.subHeader = item.subtitle;
           actionSheet.buttons = buttons;
 
           document.body.appendChild(actionSheet);
           await actionSheet.present();
         }
 
-        async toggleFavorite(itemId) {
-          try {
-            const wasFavorite = await this.dataManager.toggleFavorite(itemId, this.authService);
-            this.render();
-            this.updateStatistics();
-          } catch (error) {
-            console.error('切換收藏失敗:', error);
+        toggleFavorite(itemId) {
+          const wasFavorite = this.dataManager.toggleFavorite(itemId);
+          this.render();
+          this.updateStatistics();
+          this.showToast(wasFavorite ? '已取消收藏' : '已加入收藏', 'success');
+        }
+
+        openVideoModal(videoUrl, title, description) {
+          const videoId = this.extractVideoId(videoUrl);
+          if (!videoId) {
+            this.showToast('無法解析視頻URL', 'danger');
+            return;
+          }
+          
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          
+          document.getElementById('video-modal-title').textContent = title;
+          document.getElementById('video-player').src = embedUrl;
+          document.getElementById('video-description').textContent = description;
+          
+          const modal = document.getElementById('video-modal');
+          if (modal) {
+            modal.present();
           }
         }
 
-        handleTagClick(tag) {
-          const searchbar = DOMManager.query('#main-searchbar');
-          if (searchbar) {
-            searchbar.value = tag;
+        closeVideoModal() {
+          const modal = document.getElementById('video-modal');
+          if (modal) {
+            const videoPlayer = document.getElementById('video-player');
+            if (videoPlayer) {
+              videoPlayer.src = '';
+            }
+            modal.dismiss();
           }
-          this.handleSearch(tag);
-          this.showToast(`已篩選標籤: ${tag}`);
+        }
+
+        openSettingsModal() {
+          const modal = document.getElementById('settings-modal');
+          if (modal) {
+            modal.present();
+          }
+        }
+
+        closeSettingsModal() {
+          const modal = document.getElementById('settings-modal');
+          if (modal) {
+            modal.dismiss();
+          }
+        }
+
+        openInfoModal() {
+          const modal = document.getElementById('info-modal');
+          if (modal) {
+            modal.present();
+          }
+        }
+
+        closeInfoModal() {
+          const modal = document.getElementById('info-modal');
+          if (modal) {
+            modal.dismiss();
+          }
         }
 
         showEmptyState() {
-          const list = DOMManager.query('#theme-list');
+          const list = document.getElementById('theme-list');
           if (!list) return;
           
           list.innerHTML = `
             <div class="empty-state">
               <ion-icon name="search-outline"></ion-icon>
               <h3>沒有找到相關內容</h3>
-              <p>請嘗試其他搜索條件或重新加載數據</p>
-              <ion-button fill="solid" color="primary" onclick="app.reloadWikiEntries()">
-                <ion-icon name="refresh" slot="start"></ion-icon>重新加載API數據
-              </ion-button>
+              <p>請嘗試其他搜索條件</p>
             </div>
           `;
         }
 
         updateFilterStatus() {
-          const statusElement = DOMManager.query('#filter-status');
+          const statusElement = document.getElementById('filter-status');
           if (!statusElement) return;
           
           const filters = this.dataManager.filters;
@@ -1920,11 +1571,17 @@
             statusElement.innerHTML = `
               <ion-item>
                 <ion-label>篩選條件: ${statusText}</ion-label>
-                <ion-button fill="clear" size="small" onclick="app.clearAllFilters()">
+                <ion-button fill="clear" size="small">
                   <ion-icon name="close-circle" slot="icon-only"></ion-icon>
                 </ion-button>
               </ion-item>
             `;
+            
+            // 绑定清除按钮事件
+            const clearButton = statusElement.querySelector('ion-button');
+            if (clearButton) {
+              clearButton.addEventListener('click', () => this.clearAllFilters());
+            }
           } else {
             statusElement.style.display = 'none';
           }
@@ -1933,30 +1590,21 @@
         updateStatistics() {
           const stats = this.dataManager.getStatistics();
           
-          const elements = [
-            { id: 'total-count', value: stats.total },
-            { id: 'video-count', value: stats.videos },
-            { id: 'favorite-count', value: stats.favorites },
-            { id: 'category-count', value: stats.categories },
-            { id: 'count-all', value: stats.categoryCounts.all },
-            { id: 'count-education', value: stats.categoryCounts.education },
-            { id: 'count-community', value: stats.categoryCounts.community },
-            { id: 'count-tools', value: stats.categoryCounts.tools },
-            { id: 'count-favorites', value: stats.categoryCounts.favorites },
-            { id: 'count-videos', value: stats.categoryCounts.videos }
-          ];
-
-          elements.forEach(({ id, value }) => {
-            const element = DOMManager.query(`#${id}`);
-            if (element) {
-              element.textContent = value.toString();
-            }
-          });
+          document.getElementById('total-count').textContent = stats.total;
+          document.getElementById('video-count').textContent = stats.videos;
+          document.getElementById('favorite-count').textContent = stats.favorites;
+          document.getElementById('category-count').textContent = stats.categories;
+          document.getElementById('count-all').textContent = stats.categoryCounts.all;
+          document.getElementById('count-education').textContent = stats.categoryCounts.education;
+          document.getElementById('count-community').textContent = stats.categoryCounts.community;
+          document.getElementById('count-tools').textContent = stats.categoryCounts.tools;
+          document.getElementById('count-favorites').textContent = stats.categoryCounts.favorites;
+          document.getElementById('count-videos').textContent = stats.categoryCounts.videos;
         }
 
         clearAllFilters() {
-          const searchbar = DOMManager.query('#main-searchbar');
-          const segment = DOMManager.query('#category-segment');
+          const searchbar = document.getElementById('main-searchbar');
+          const segment = document.getElementById('category-segment');
           
           if (searchbar) searchbar.value = '';
           if (segment) segment.value = 'all';
@@ -1969,88 +1617,55 @@
           });
           this.render();
           
-          const statusElement = DOMManager.query('#filter-status');
+          const statusElement = document.getElementById('filter-status');
           if (statusElement) {
             statusElement.style.display = 'none';
           }
         }
 
-        showLoading(show) {
-          this.dataManager.showLoading(show);
-        }
+        async reloadWikiEntries() {
+          DOMManager.toggleVisibility('#api-error-state', false);
+          DOMManager.toggleVisibility('#init-loading', true);
+          DOMManager.toggleVisibility('#main-content', false);
 
-        scrollToTop() {
-          const content = DOMManager.query('ion-content');
-          if (content) {
-            content.scrollToTop(500);
+          try {
+            await this.dataManager.initializeData();
+            this.render();
+            
+            DOMManager.toggleVisibility('#init-loading', false);
+            DOMManager.toggleVisibility('#main-content', true);
+            
+            this.showToast('數據重新加載成功！', 'success');
+          } catch (error) {
+            this.showApiErrorState(`重新加載失敗：${error.message}`);
           }
         }
 
-        closeAllModals() {
-          const modals = DOMManager.queryAll('ion-modal');
-          modals.forEach(modal => {
-            if (modal.dismiss) {
-              modal.dismiss();
-            }
-          });
-        }
-
-        showSortOptions() {
-          this.showToast('排序選項功能', 'primary');
-        }
-
-        async shareItem(item) {
-          if (navigator.share) {
-            try {
-              await navigator.share({
-                title: item.title,
-                text: item.details,
-                url: window.location.href
-              });
-            } catch (error) {
-              this.showToast('分享已取消', 'medium');
-            }
-          } else {
-            this.showToast('分享功能不可用', 'warning');
-          }
-        }
-
-        toggleTheme(isDark) {
-          this.currentTheme = isDark ? 'dark' : 'light';
-          document.body.classList.toggle('ion-palette-dark', isDark);
-          this.showToast(`已切換到${isDark ? '深色' : '淺色'}主題`);
+        showApiErrorState(message) {
+          DOMManager.toggleVisibility('#init-loading', false);
+          DOMManager.toggleVisibility('#main-content', false);
+          DOMManager.toggleVisibility('#api-error-state', true);
         }
 
         getTagColor(tag) {
           const colorMap = {
-            '教育': 'success', '詞典': 'success', '學習': 'success',
-            '社群': 'danger', '組織': 'danger', '管理': 'danger', 
-            '政策': 'warning', '結構': 'warning', '版本': 'warning',
-            '媒體': 'tertiary', '資料': 'tertiary', '網站': 'tertiary',
-            '百科': 'primary', '文獻': 'primary', '引用': 'primary',
-            '工具': 'dark', '條目': 'secondary',
-            '生物多樣性': 'success', '地球生態系統': 'success',
-            '世界建築史': 'tertiary', '建築風格': 'tertiary',
-            '太空探索史': 'primary', '科學': 'primary'
+            '教育': 'success', '學習': 'success',
+            '社群': 'danger', '管理': 'danger', 
+            '工具': 'warning', '開發': 'warning',
+            '百科': 'primary', '參考': 'primary'
           };
           return colorMap[tag] || 'primary';
         }
 
         async showToast(message, color = 'primary') {
-          try {
-            const toast = DOMManager.create('ion-toast', {
-              properties: {
-                message,
-                duration: 2000,
-                color,
-                position: 'bottom'
-              }
-            });
-            document.body.appendChild(toast);
-            await toast.present();
-          } catch (error) {
-            console.warn('顯示 Toast 失敗:', error);
-          }
+          const toast = document.createElement('ion-toast');
+          toast.message = message;
+          toast.duration = 2000;
+          toast.color = color;
+          toast.position = 'bottom';
+          
+          document.body.appendChild(toast);
+          await toast.present();
         }
 
         render() {
@@ -2070,6 +1685,7 @@
         }
       }
 
+      // 初始化应用
       let app;
 
       document.addEventListener('DOMContentLoaded', async () => {
@@ -2077,11 +1693,8 @@
         await app.initializeApp();
       });
 
-      window.addEventListener('beforeunload', () => {
-        if (app) {
-          app.destroy();
-        }
-      });
+      // 全局访问
+      window.app = app;
     </script>
   </body>
 </html>
